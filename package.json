@@ -1,0 +1,16 @@
+{
+  "name": "bmw-showroom",
+  "version": "1.0.0",
+  "description": "BMW Showroom Management System",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "seed": "node server/seed.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "@supabase/supabase-js": "^2.39.0",
+    "dotenv": "^16.3.1"
+  }
+}

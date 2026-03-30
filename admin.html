@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BMW Admin Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0b0b0b; color: #fff; font-family: 'Montserrat', sans-serif; font-size: 14px; }
+    a { color: inherit; text-decoration: none; }
+
+    .dash-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 40px; border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .dash-nav h1 { font-size: 18px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; }
+    .dash-nav h1 span { color: #4da6e8; }
+    .dash-nav-right { display: flex; align-items: center; gap: 24px; }
+    .dash-nav-right span { font-size: 12px; color: #888; }
+    .logout-btn {
+      font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+      padding: 8px 20px; border: 1px solid #4da6e8; color: #4da6e8; cursor: pointer;
+      background: none; transition: all 0.3s;
+    }
+    .logout-btn:hover { background: #4da6e8; color: #000; }
+
+    .dash-body { max-width: 1200px; margin: 0 auto; padding: 40px; }
+
+    /* Stats grid */
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 48px;
+    }
+    .stat-card {
+      background: #111; border: 1px solid rgba(255,255,255,0.06); padding: 28px 24px;
+    }
+    .stat-card .num { font-size: 36px; font-weight: 800; color: #fff; }
+    .stat-card .num.blue { color: #4da6e8; }
+    .stat-card .label { font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: #666; margin-top: 8px; }
+
+    /* Section */
+    .dash-section { margin-bottom: 48px; }
+    .dash-section h2 {
+      font-size: 12px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+      color: #666; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    /* Table */
+    .dash-table { width: 100%; border-collapse: collapse; }
+    .dash-table th {
+      text-align: left; font-size: 10px; font-weight: 600; letter-spacing: 2px;
+      text-transform: uppercase; color: #555; padding: 12px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .dash-table td {
+      padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 13px; color: #ccc;
+    }
+    .dash-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+    .badge {
+      display: inline-block; padding: 4px 12px; font-size: 10px; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase;
+    }
+    .badge-admin { border: 1px solid #4da6e8; color: #4da6e8; }
+    .badge-salesman { border: 1px solid #f0ad4e; color: #f0ad4e; }
+    .badge-customer { border: 1px solid #888; color: #888; }
+
+    /* Add car form */
+    .add-car-form {
+      display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap;
+    }
+    .add-car-form input {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+      color: #fff; padding: 12px 16px; font-size: 13px; font-family: inherit; outline: none;
+      flex: 1; min-width: 150px;
+    }
+    .add-car-form input:focus { border-color: #4da6e8; }
+    .add-car-form input::placeholder { color: #555; }
+    .add-car-form button {
+      background: #4da6e8; color: #fff; border: none; padding: 12px 28px;
+      font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+      cursor: pointer; transition: background 0.3s;
+    }
+    .add-car-form button:hover { background: #3a8fd0; }
+
+    .delete-btn {
+      background: none; border: 1px solid #c0392b; color: #c0392b; padding: 4px 14px;
+      font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+      cursor: pointer; transition: all 0.3s;
+    }
+    .delete-btn:hover { background: #c0392b; color: #fff; }
+
+    /* Salesman perf */
+    .perf-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+    .perf-card {
+      background: #111; border: 1px solid rgba(255,255,255,0.06); padding: 24px;
+    }
+    .perf-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .perf-card p { font-size: 12px; color: #666; margin-bottom: 12px; }
+    .perf-card .perf-stats { display: flex; gap: 24px; }
+    .perf-card .perf-stat .num { font-size: 24px; font-weight: 800; }
+    .perf-card .perf-stat .lbl { font-size: 10px; color: #666; letter-spacing: 1px; text-transform: uppercase; }
+
+    @media (max-width: 768px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .dash-body { padding: 24px 20px; }
+      .dash-table { font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="dash-nav">
+    <h1>BMW <span>Admin</span></h1>
+    <div class="dash-nav-right">
+      <span id="admin-email"></span>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </nav>
+
+  <div class="dash-body">
+
+    <!-- Stats -->
+    <div class="stats-grid" id="stats-grid"></div>
+
+    <!-- Salesman Performance -->
+    <div class="dash-section">
+      <h2>Salesman Performance</h2>
+      <div class="perf-grid" id="perf-grid"></div>
+    </div>
+
+    <!-- Add Car -->
+    <div class="dash-section">
+      <h2>Manage Cars</h2>
+      <form class="add-car-form" onsubmit="addCar(event)">
+        <input type="text" id="car-name" placeholder="Model name (e.g. BMW M4)" required />
+        <input type="text" id="car-price" placeholder="Price (e.g. 85 L)" required />
+        <input type="text" id="car-image" placeholder="Image filename (optional)" />
+        <button type="submit">Add Car</button>
+      </form>
+      <table class="dash-table">
+        <thead><tr><th>Model</th><th>Price</th><th>Image</th><th>Action</th></tr></thead>
+        <tbody id="cars-table"></tbody>
+      </table>
+    </div>
+
+    <!-- All Users -->
+    <div class="dash-section">
+      <h2>All Users</h2>
+      <table class="dash-table">
+        <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Joined</th></tr></thead>
+        <tbody id="users-table"></tbody>
+      </table>
+    </div>
+
+    <!-- All Test Drives -->
+    <div class="dash-section">
+      <h2>All Test Drive Bookings</h2>
+      <table class="dash-table">
+        <thead><tr><th>Customer</th><th>Model</th><th>Date</th><th>Status</th></tr></thead>
+        <tbody id="td-table"></tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <script>
+    const API = window.location.origin + '/api';
+    const user = JSON.parse(localStorage.getItem('bmw_user') || 'null');
+
+    if (!user || user.role !== 'admin') {
+      window.location.href = '/index.html';
+    }
+
+    document.getElementById('admin-email').textContent = user?.email || '';
+
+    function logout() {
+      localStorage.removeItem('bmw_user');
+      window.location.href = '/index.html';
+    }
+
+    async function loadStats() {
+      const res = await fetch(API + '/admin-stats');
+      const s = await res.json();
+
+      document.getElementById('stats-grid').innerHTML = `
+        <div class="stat-card"><div class="num blue">${s.totalTestDrives}</div><div class="label">Total Test Drives</div></div>
+        <div class="stat-card"><div class="num">${s.pending}</div><div class="label">Pending</div></div>
+        <div class="stat-card"><div class="num">${s.totalUsers}</div><div class="label">Customers</div></div>
+        <div class="stat-card"><div class="num">${s.totalCars}</div><div class="label">Cars Listed</div></div>
+      `;
+
+      document.getElementById('perf-grid').innerHTML = s.salesmanStats.length
+        ? s.salesmanStats.map(sm => `
+          <div class="perf-card">
+            <h4>${sm.name}</h4>
+            <p>${sm.email}</p>
+            <div class="perf-stats">
+              <div class="perf-stat"><div class="num blue">${sm.handled}</div><div class="lbl">Handled</div></div>
+              <div class="perf-stat"><div class="num">${sm.approved}</div><div class="lbl">Approved</div></div>
+            </div>
+          </div>
+        `).join('')
+        : '<p style="color:#555">No salesmen registered yet.</p>';
+    }
+
+    async function loadCars() {
+      const res = await fetch(API + '/cars');
+      const cars = await res.json();
+      document.getElementById('cars-table').innerHTML = cars.map(c => `
+        <tr>
+          <td>${c.model_name}</td>
+          <td>${c.price}</td>
+          <td>${c.image || '—'}</td>
+          <td><button class="delete-btn" onclick="deleteCar('${c.id}')">Delete</button></td>
+        </tr>
+      `).join('');
+    }
+
+    async function addCar(e) {
+      e.preventDefault();
+      await fetch(API + '/add-car', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model_name: document.getElementById('car-name').value,
+          price: document.getElementById('car-price').value,
+          image: document.getElementById('car-image').value
+        })
+      });
+      document.getElementById('car-name').value = '';
+      document.getElementById('car-price').value = '';
+      document.getElementById('car-image').value = '';
+      loadCars();
+      loadStats();
+    }
+
+    async function deleteCar(id) {
+      await fetch(API + '/car/' + id, { method: 'DELETE' });
+      loadCars();
+      loadStats();
+    }
+
+    async function loadUsers() {
+      const res = await fetch(API + '/all-users');
+      const users = await res.json();
+      document.getElementById('users-table').innerHTML = users.map(u => `
+        <tr>
+          <td>${u.name}</td>
+          <td>${u.email}</td>
+          <td><span class="badge badge-${u.role}">${u.role}</span></td>
+          <td>${new Date(u.created_at).toLocaleDateString()}</td>
+        </tr>
+      `).join('');
+    }
+
+    async function loadTestDrives() {
+      const res = await fetch(API + '/test-drives');
+      const tds = await res.json();
+      document.getElementById('td-table').innerHTML = tds.length
+        ? tds.map(td => `
+          <tr>
+            <td>${td.user_name}<br><span style="color:#555;font-size:11px">${td.user_email}</span></td>
+            <td>${td.car_model}</td>
+            <td>${td.date}</td>
+            <td><span class="badge badge-${td.status === 'approved' ? 'admin' : td.status === 'rejected' ? 'salesman' : 'customer'}">${td.status}</span></td>
+          </tr>
+        `).join('')
+        : '<tr><td colspan="4" style="color:#555">No bookings yet.</td></tr>';
+    }
+
+    // Load everything
+    loadStats();
+    loadCars();
+    loadUsers();
+    loadTestDrives();
+  </script>
+</body>
+</html>

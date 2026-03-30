@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BMW — The Ultimate Driving Machine</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700&family=Barlow+Condensed:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Preload intro image -->
+  <link rel="preload" href="https://images.unsplash.com/photo-1555215695-3004980ad54e?w=3840&q=90" as="image" />
+</head>
+<body>
+
+  <!-- INTRO OVERLAY -->
+  <div id="intro" class="intro-overlay">
+    <img class="intro-img" src="https://images.unsplash.com/photo-1555215695-3004980ad54e?w=3840&q=90" alt="BMW M4 Dark" />
+    <div class="intro-bottom-bar">
+      <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="48" fill="#111"/>
+        <circle cx="50" cy="50" r="32" fill="#fff"/>
+        <path d="M50 18 A32 32 0 0 1 82 50 L50 50 Z" fill="#1C69D4"/>
+        <path d="M18 50 A32 32 0 0 1 50 18 L50 50 Z" fill="#fff"/>
+        <path d="M50 82 A32 32 0 0 1 18 50 L50 50 Z" fill="#1C69D4"/>
+        <path d="M82 50 A32 32 0 0 1 50 82 L50 50 Z" fill="#fff"/>
+        <circle cx="50" cy="50" r="32" stroke="#fff" stroke-width="1.5"/>
+        <circle cx="50" cy="50" r="48" stroke="#888" stroke-width="1"/>
+        <text x="50" y="14" font-family="Arial" font-size="10" fill="#fff" text-anchor="middle" font-weight="bold" letter-spacing="3">B  M  W</text>
+      </svg>
+      <p class="intro-hint">Click anywhere to enter</p>
+    </div>
+  </div>
+
+  <!-- MAIN WRAPPER -->
+  <div id="main-content" class="locked">
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <div class="nav-inner">
+      <a href="#" class="logo">
+        <svg width="48" height="48" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="rim" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#d0d8e8"/>
+              <stop offset="40%" stop-color="#8a9ab5"/>
+              <stop offset="60%" stop-color="#b0bdd4"/>
+              <stop offset="100%" stop-color="#d0d8e8"/>
+            </linearGradient>
+            <linearGradient id="blueQ1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#4da6e8"/>
+              <stop offset="100%" stop-color="#1a5fa0"/>
+            </linearGradient>
+            <linearGradient id="blueQ2" x1="1" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#1a5fa0"/>
+              <stop offset="100%" stop-color="#4da6e8"/>
+            </linearGradient>
+            <linearGradient id="whiteQ1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="100%" stop-color="#c8c8c8"/>
+            </linearGradient>
+            <linearGradient id="whiteQ2" x1="1" y1="1" x2="0" y2="0">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="100%" stop-color="#c8c8c8"/>
+            </linearGradient>
+          </defs>
+          <!-- Outer rim -->
+          <circle cx="50" cy="50" r="49" fill="url(#rim)"/>
+          <!-- Black ring -->
+          <circle cx="50" cy="50" r="45" fill="#111"/>
+          <!-- Inner ring edge -->
+          <circle cx="50" cy="50" r="33" fill="#555" />
+          <circle cx="50" cy="50" r="32" fill="none"/>
+          <!-- Blue quadrants -->
+          <path d="M50 18 A32 32 0 0 0 18 50 L50 50 Z" fill="url(#blueQ1)"/>
+          <path d="M50 82 A32 32 0 0 0 82 50 L50 50 Z" fill="url(#blueQ2)"/>
+          <!-- White quadrants -->
+          <path d="M82 50 A32 32 0 0 0 50 18 L50 50 Z" fill="url(#whiteQ1)"/>
+          <path d="M18 50 A32 32 0 0 0 50 82 L50 50 Z" fill="url(#whiteQ2)"/>
+          <!-- Cross lines -->
+          <line x1="50" y1="18" x2="50" y2="82" stroke="#888" stroke-width="0.8"/>
+          <line x1="18" y1="50" x2="82" y2="50" stroke="#888" stroke-width="0.8"/>
+          <!-- Inner ring -->
+          <circle cx="50" cy="50" r="32" fill="none" stroke="#999" stroke-width="1"/>
+        </svg>
+        <span class="logo-text">BMW</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#models">Models</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#electric">Electric</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <a href="#test-drive" class="nav-cta">Book a Test Drive</a>
+      <a href="#" class="nav-login" id="login-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        Login
+      </a>
+      <button class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobile-menu">
+    <ul>
+      <li><a href="#models" onclick="closeMobile()">Models</a></li>
+      <li><a href="#experience" onclick="closeMobile()">Experience</a></li>
+      <li><a href="#electric" onclick="closeMobile()">Electric</a></li>
+      <li><a href="#contact" onclick="closeMobile()">Contact</a></li>
+      <li><a href="#test-drive" class="mobile-cta" onclick="closeMobile()">Book a Test Drive</a></li>
+      <li><a href="#" onclick="closeMobile()">Login</a></li>
+    </ul>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-bg">
+      <div class="hero-gradient"></div>
+      <div class="hero-lines">
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+      </div>
+    </div>
+    <div class="hero-content">
+      <p class="hero-eyebrow reveal">Munich · Est. 1916</p>
+      <h1 class="hero-title reveal">
+        <span>The Ultimate</span>
+        <span class="accent">Driving Machine</span>
+      </h1>
+      <p class="hero-sub reveal">Precision engineered. Beautifully designed. Relentlessly refined.</p>
+      <div class="hero-actions reveal">
+        <a href="#models" class="btn-primary">Explore Models</a>
+        <a href="#test-drive" class="btn-ghost">Book a Test Drive</a>
+      </div>
+    </div>
+    <div class="hero-car">
+      <video class="hero-car-video" src="renamed123.mov" autoplay muted loop playsinline></video>
+    </div>
+    <div class="hero-blur-fade"></div>
+    <div class="hero-blur-top"></div>
+    <div class="hero-stats reveal">
+      <div class="stat"><span class="stat-num">503</span><span class="stat-label">Horsepower</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat"><span class="stat-num">3.2s</span><span class="stat-label">0–100 km/h</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat"><span class="stat-num">290</span><span class="stat-label">Top Speed km/h</span></div>
+    </div>
+    <a href="#models" class="scroll-indicator">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </a>
+  </section>
+
+  <!-- MODELS -->
+  <section class="models" id="models">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-eyebrow reveal">Our Fleet</p>
+        <h2 class="section-title reveal">Choose Your Machine</h2>
+      </div>
+      <div class="models-grid">
+
+        <div class="model-card reveal-card" data-index="0">
+          <div class="card-badge">
+            <svg width="54" height="11" viewBox="0 0 108 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0 22L7 0H14L7 22H0Z" fill="#75B6E4"/><path d="M12 22L19 0H26L19 22H12Z" fill="#1C3F7E"/>
+              <path d="M24 22L31 0H38L31 22H24Z" fill="#C8102E"/>
+              <path d="M36 22L43 0L51 14.5L59 0H66L59 22L51 10L43 22H36Z" fill="#1a1a1a"/>
+            </svg>
+          </div>
+          <div class="card-visual m3">
+            <img class="card-car-img" src="m3.jpg" alt="BMW M3 Competition" loading="lazy" />
+          </div>
+          <div class="card-info">
+            <div class="card-top">
+              <h3>BMW M3</h3>
+              <span class="card-price">From ₹1.15 Cr</span>
+            </div>
+            <p class="card-desc">The sedan that defined performance. Twin-turbo inline-six with M xDrive for uncompromising precision.</p>
+            <div class="card-specs">
+              <span><strong>510</strong> hp</span>
+              <span><strong>3.5s</strong> 0–100</span>
+              <span><strong>RWD/AWD</strong></span>
+            </div>
+            <a href="#test-drive" class="card-btn">Configure</a>
+          </div>
+        </div>
+
+        <div class="model-card reveal-card featured" data-index="1">
+          <div class="card-badge featured-badge" style="display:flex;align-items:center;gap:8px;">
+            <svg width="54" height="11" viewBox="0 0 108 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0 22L7 0H14L7 22H0Z" fill="#75B6E4"/><path d="M12 22L19 0H26L19 22H12Z" fill="#1C3F7E"/>
+              <path d="M24 22L31 0H38L31 22H24Z" fill="#C8102E"/>
+              <path d="M36 22L43 0L51 14.5L59 0H66L59 22L51 10L43 22H36Z" fill="#1C69D4"/>
+            </svg>
+            Most Popular
+          </div>
+          <div class="card-visual m5">
+            <img class="card-car-img" src="m5.jpg" alt="BMW M5 Competition" loading="lazy" />
+          </div>
+          <div class="card-info">
+            <div class="card-top">
+              <h3>BMW M5</h3>
+              <span class="card-price">From ₹2.05 Cr</span>
+            </div>
+            <p class="card-desc">The super sedan. 727 hp hybrid powertrain, M xDrive, and a cabin that rivals the finest luxury cars.</p>
+            <div class="card-specs">
+              <span><strong>727</strong> hp</span>
+              <span><strong>3.5s</strong> 0–100</span>
+              <span><strong>Hybrid AWD</strong></span>
+            </div>
+            <a href="#test-drive" class="card-btn">Configure</a>
+          </div>
+        </div>
+
+        <div class="model-card reveal-card" data-index="2">
+          <div class="card-badge">
+            <!-- BMW Roundel logo for X Series -->
+            <svg width="26" height="26" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="50" cy="50" r="48" fill="#0166B1" stroke="#000" stroke-width="4"/>
+              <circle cx="50" cy="50" r="34" fill="none" stroke="#fff" stroke-width="3"/>
+              <path d="M50 16 A34 34 0 0 1 84 50 L50 50 Z" fill="#fff"/>
+              <path d="M16 50 A34 34 0 0 1 50 16 L50 50 Z" fill="#0166B1"/>
+              <path d="M50 84 A34 34 0 0 1 16 50 L50 50 Z" fill="#fff"/>
+              <path d="M84 50 A34 34 0 0 1 50 84 L50 50 Z" fill="#0166B1"/>
+              <circle cx="50" cy="50" r="48" fill="none" stroke="#000" stroke-width="4"/>
+              <text x="50" y="15" font-family="Arial" font-size="9" fill="#fff" text-anchor="middle" font-weight="bold" letter-spacing="2">BMW</text>
+            </svg>
+            X Series
+          </div>
+          <div class="card-visual x5">
+            <img class="card-car-img" src="x5.jpg" alt="BMW X5" loading="lazy" />
+          </div>
+          <div class="card-info">
+            <div class="card-top">
+              <h3>BMW X5</h3>
+              <span class="card-price">From ₹95 L</span>
+            </div>
+            <p class="card-desc">The Sports Activity Vehicle that started it all. Commanding presence, luxurious interior, pure BMW soul.</p>
+            <div class="card-specs">
+              <span><strong>335</strong> hp</span>
+              <span><strong>5.6s</strong> 0–100</span>
+              <span><strong>xDrive AWD</strong></span>
+            </div>
+            <a href="#test-drive" class="card-btn">Configure</a>
+          </div>
+        </div>
+
+        <div class="model-card reveal-card" data-index="3">
+          <div class="card-badge" style="display:flex;align-items:center;gap:6px;">
+            <!-- BMW i logo badge -->
+            <svg width="18" height="18" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="50" cy="50" r="48" fill="#0166B1" stroke="#000" stroke-width="4"/>
+              <circle cx="50" cy="50" r="34" fill="none" stroke="#fff" stroke-width="3"/>
+              <path d="M50 16 A34 34 0 0 1 84 50 L50 50 Z" fill="#fff"/>
+              <path d="M16 50 A34 34 0 0 1 50 16 L50 50 Z" fill="#0166B1"/>
+              <path d="M50 84 A34 34 0 0 1 16 50 L50 50 Z" fill="#fff"/>
+              <path d="M84 50 A34 34 0 0 1 50 84 L50 50 Z" fill="#0166B1"/>
+              <circle cx="50" cy="50" r="48" fill="none" stroke="#000" stroke-width="4"/>
+            </svg>
+            i Series
+          </div>
+          <div class="card-visual i7">
+            <img class="card-car-img" src="i7.jpg" alt="BMW i7" loading="lazy" />
+          </div>
+          <div class="card-info">
+            <div class="card-top">
+              <h3>BMW i7</h3>
+              <span class="card-price">From ₹1.95 Cr</span>
+            </div>
+            <p class="card-desc">The electric flagship. Theatre Screen. Rear Executive Lounge. The future of luxury mobility has arrived.</p>
+            <div class="card-specs">
+              <span><strong>544</strong> hp</span>
+              <span><strong>4.7s</strong> 0–100</span>
+              <span><strong>625 km Range</strong></span>
+            </div>
+            <a href="#test-drive" class="card-btn">Configure</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section class="experience" id="experience">
+    <div class="exp-left">
+      <p class="section-eyebrow exp-stagger">Craftsmanship</p>
+      <h2 class="section-title exp-stagger">Engineered to <br><em>Perfection</em></h2>
+      <p class="exp-body exp-stagger">Every BMW is a study in obsessive attention to detail. From the precision-stitched Merino leather to the hand-finished carbon fiber, no element is left unrefined.</p>
+
+      <blockquote class="exp-quote exp-stagger">
+        "M stands for More. More power, more precision, more thrill. The most powerful letter in the world."
+      </blockquote>
+      <div class="exp-features">
+        <div class="exp-feature exp-stagger">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <div>
+            <h4>Adaptive M Suspension</h4>
+            <p>Real-time damping adjustment for every road condition.</p>
+          </div>
+        </div>
+        <div class="exp-feature exp-stagger">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+            </svg>
+          </div>
+          <div>
+            <h4>BMW Curved Display</h4>
+            <p>12.3" + 14.9" screens seamlessly merged into one interface.</p>
+          </div>
+        </div>
+        <div class="exp-feature exp-stagger">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M3 18v-6a9 9 0 0118 0v6"/><path d="M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3zM3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3z"/>
+            </svg>
+          </div>
+          <div>
+            <h4>Bowers &amp; Wilkins Audio</h4>
+            <p>36-speaker Diamond Surround Sound System. Concert-hall acoustics.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="exp-right exp-stagger">
+      <div class="exp-visual">
+        <div class="exp-ring exp-ring-1"></div>
+        <div class="exp-ring exp-ring-2"></div>
+        <div class="exp-ring exp-ring-3"></div>
+        <div class="exp-center">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="exp-rim" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#d0d8e8"/>
+                <stop offset="40%" stop-color="#8a9ab5"/>
+                <stop offset="60%" stop-color="#b0bdd4"/>
+                <stop offset="100%" stop-color="#d0d8e8"/>
+              </linearGradient>
+              <linearGradient id="exp-blueQ1" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#4da6e8"/>
+                <stop offset="100%" stop-color="#1a5fa0"/>
+              </linearGradient>
+              <linearGradient id="exp-blueQ2" x1="1" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#1a5fa0"/>
+                <stop offset="100%" stop-color="#4da6e8"/>
+              </linearGradient>
+              <linearGradient id="exp-whiteQ1" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="100%" stop-color="#c8c8c8"/>
+              </linearGradient>
+              <linearGradient id="exp-whiteQ2" x1="1" y1="1" x2="0" y2="0">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="100%" stop-color="#c8c8c8"/>
+              </linearGradient>
+            </defs>
+            <circle cx="50" cy="50" r="49" fill="url(#exp-rim)"/>
+            <circle cx="50" cy="50" r="45" fill="#111"/>
+            <circle cx="50" cy="50" r="33" fill="#555"/>
+            <path d="M50 18 A32 32 0 0 0 18 50 L50 50 Z" fill="url(#exp-blueQ1)"/>
+            <path d="M50 82 A32 32 0 0 0 82 50 L50 50 Z" fill="url(#exp-blueQ2)"/>
+            <path d="M82 50 A32 32 0 0 0 50 18 L50 50 Z" fill="url(#exp-whiteQ1)"/>
+            <path d="M18 50 A32 32 0 0 0 50 82 L50 50 Z" fill="url(#exp-whiteQ2)"/>
+            <line x1="50" y1="18" x2="50" y2="82" stroke="#888" stroke-width="0.8"/>
+            <line x1="18" y1="50" x2="82" y2="50" stroke="#888" stroke-width="0.8"/>
+            <circle cx="50" cy="50" r="32" fill="none" stroke="#999" stroke-width="1"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ELECTRIC -->
+  <section class="electric" id="electric">
+    <div class="electric-bg">
+      <video class="electric-video" src="electric123.MOV" autoplay muted loop playsinline></video>
+      <div class="electric-overlay"></div>
+    </div>
+    <div class="electric-blur-top"></div>
+    <div class="electric-blur-bottom"></div>
+    <div class="container">
+      <div class="electric-content">
+        <p class="section-eyebrow reveal">The Future</p>
+        <h2 class="electric-title reveal">Drive the <span>Revolution</span></h2>
+        <p class="electric-sub reveal">The BMW i Series redefines what an electric car can be. Zero compromise on performance. Zero emissions on the road.</p>
+        <div class="electric-cards reveal">
+          <div class="elec-card">
+            <div class="elec-icon">⚡</div>
+            <h4>Instant Torque</h4>
+            <p>Maximum power from 0 rpm. Feel it before you see the numbers.</p>
+          </div>
+          <div class="elec-card">
+            <div class="elec-icon">🔋</div>
+            <h4>Long Range</h4>
+            <p>Up to 625 km on a single charge. Go further, stop less.</p>
+          </div>
+          <div class="elec-card">
+            <div class="elec-icon">⚙</div>
+            <h4>Fast Charging</h4>
+            <p>200 kW DC rapid charging. 10–80% in under 35 minutes.</p>
+          </div>
+        </div>
+        <a href="#test-drive" class="btn-primary reveal">Experience BMW i Series</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials">
+    <div class="container">
+      <p class="section-eyebrow reveal">What Owners Say</p>
+      <div class="testi-grid reveal">
+        <div class="testi-card">
+          <div class="stars">★★★★★</div>
+          <p>"Owning an M3 is an experience words can't fully capture. The precision, the roar, the way it corners — nothing compares."</p>
+          <div class="testi-author">
+            <div class="testi-avatar">AK</div>
+            <div><strong>Arjun K.</strong><span>M3 Competition Owner</span></div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="stars">★★★★★</div>
+          <p>"The i7 is on another level. Silent, powerful, and so luxurious I forget I'm in a car. The Theatre Screen is absurdly good."</p>
+          <div class="testi-author">
+            <div class="testi-avatar">PR</div>
+            <div><strong>Priya R.</strong><span>i7 xDrive60 Owner</span></div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="stars">★★★★★</div>
+          <p>"My X5 handles the mountains and the city with equal grace. 5 years in and I still get excited every time I start the engine."</p>
+          <div class="testi-author">
+            <div class="testi-avatar">MS</div>
+            <div><strong>Mihail S.</strong><span>X5 M60i Owner</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEST DRIVE -->
+  <section class="test-drive" id="test-drive">
+    <div class="container">
+      <div class="td-inner reveal">
+        <div class="td-text">
+          <p class="section-eyebrow">Showroom</p>
+          <h2>Feel the Difference</h2>
+          <p>Reserve your personal test drive experience at our showroom. Our BMW Genius specialists will walk you through every detail.</p>
+        </div>
+        <form class="td-form" id="td-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" name="fullname" placeholder="Your name" required />
+            </div>
+            <div class="form-group">
+              <label>Phone</label>
+              <input type="tel" name="phone" placeholder="+91 98765 43210" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" name="email" placeholder="you@example.com" required />
+            </div>
+            <div class="form-group">
+              <label>Model of Interest</label>
+              <select name="model" required>
+                <option value="" disabled selected>Select a model</option>
+                <option>BMW M3 Competition</option>
+                <option>BMW M5</option>
+                <option>BMW X5</option>
+                <option>BMW X7</option>
+                <option>BMW i4</option>
+                <option>BMW i7</option>
+                <option>BMW 7 Series</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Preferred Date</label>
+            <input type="date" name="date" required />
+          </div>
+          <button type="submit" class="btn-primary full-width">Book My Test Drive</button>
+        </form>
+
+        <!-- Booking Status (replaces form when booking exists) -->
+        <div class="td-status" id="td-status" style="display:none;">
+          <div class="td-status-header">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            <div>
+              <h3 id="td-status-title">Booking Received</h3>
+              <p id="td-status-sub">We're reviewing your request</p>
+            </div>
+          </div>
+          <div id="td-status-cards"></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer" id="contact">
+    <div class="footer-inner container">
+      <div class="footer-brand">
+        <svg width="44" height="44" viewBox="0 0 48 48" fill="none">
+          <circle cx="24" cy="24" r="23" stroke="white" stroke-width="1.2" opacity="0.3"/>
+          <circle cx="24" cy="24" r="17" stroke="white" stroke-width="1.2" opacity="0.3"/>
+          <path d="M24 1 L24 47" stroke="white" stroke-width="1.2" opacity="0.3"/>
+          <path d="M1 24 L47 24" stroke="white" stroke-width="1.2" opacity="0.3"/>
+          <path d="M1 24 Q24 1 47 24" fill="#1C69D4" opacity="0.8"/>
+          <path d="M24 1 Q47 24 24 47" fill="#1C69D4" opacity="0.8"/>
+        </svg>
+        <p>The Ultimate Driving Machine.<br/>Since 1916.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h5>Models</h5>
+          <a href="#">1 Series</a>
+          <a href="#">3 Series</a>
+          <a href="#">5 Series</a>
+          <a href="#">7 Series</a>
+          <a href="#">M Series</a>
+        </div>
+        <div class="footer-col">
+          <h5>SAV</h5>
+          <a href="#">X1</a>
+          <a href="#">X3</a>
+          <a href="#">X5</a>
+          <a href="#">X7</a>
+          <a href="#">XM</a>
+        </div>
+        <div class="footer-col">
+          <h5>Electric</h5>
+          <a href="#">i3</a>
+          <a href="#">i4</a>
+          <a href="#">i5</a>
+          <a href="#">i7</a>
+          <a href="#">iX</a>
+        </div>
+        <div class="footer-col">
+          <h5>Showroom</h5>
+          <a href="#">Visit Us</a>
+          <a href="#">Test Drive</a>
+          <a href="#">Financing</a>
+          <a href="#">Service</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 BMW India. All rights reserved.</p>
+      <div class="footer-bottom-links">
+        <a href="#">Privacy</a>
+        <a href="#">Legal</a>
+        <a href="#">Cookies</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SUCCESS TOAST -->
+  <div class="toast" id="toast">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M20 6L9 17l-5-5"/></svg>
+    Test drive booked. We'll be in touch shortly.
+  </div>
+
+  <!-- END MAIN WRAPPER -->
+  </div>
+
+  <!-- AUTH MODAL -->
+  <div class="auth-overlay" id="auth-overlay">
+    <div class="auth-modal">
+      <button class="auth-close" id="auth-close">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+
+      <!-- LOGIN FORM -->
+      <div id="login-form">
+        <div class="auth-header">
+          <h2>Welcome Back</h2>
+          <p>Sign in to your BMW account</p>
+        </div>
+        <form class="auth-form" onsubmit="handleLogin(event)">
+          <div class="auth-field">
+            <label>Email</label>
+            <input type="email" name="email" placeholder="you@example.com" required />
+          </div>
+          <div class="auth-field">
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Enter your password" required />
+          </div>
+          <button type="submit" class="auth-btn">Sign In</button>
+        </form>
+        <div class="auth-switch">
+          Don't have an account? <a onclick="showRegister()">Create one</a>
+        </div>
+      </div>
+
+      <!-- REGISTER FORM -->
+      <div id="register-form" style="display:none;">
+        <div class="auth-header">
+          <h2>Join BMW</h2>
+          <p>Create your account</p>
+        </div>
+        <form class="auth-form" onsubmit="handleRegister(event)">
+          <div class="auth-field">
+            <label>Full Name</label>
+            <input type="text" name="name" placeholder="Your name" required />
+          </div>
+          <div class="auth-field">
+            <label>Email</label>
+            <input type="email" name="email" placeholder="you@example.com" required />
+          </div>
+          <div class="auth-field">
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Create a password" required />
+          </div>
+          <div class="auth-field">
+            <label>Confirm Password</label>
+            <input type="password" name="confirm" placeholder="Confirm your password" required />
+          </div>
+          <button type="submit" class="auth-btn">Create Account</button>
+        </form>
+        <div class="auth-switch">
+          Already have an account? <a onclick="showLogin()">Sign in</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
