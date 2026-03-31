@@ -6,124 +6,312 @@
   <title>BMW Salesman Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
   <style>
+    :root {
+      --bg: #0b0b0b;
+      --surface: #111111;
+      --surface2: #1a1a1a;
+      --border: rgba(255,255,255,0.06);
+      --border-hover: rgba(255,255,255,0.12);
+      --blue: #1C69D4;
+      --blue-glow: rgba(28,105,212,0.15);
+      --blue-light: #4da6e8;
+      --text: #ffffff;
+      --text-muted: #aaaaaa;
+      --text-dim: #666666;
+      --danger: #c0392b;
+    }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #0b0b0b; color: #fff; font-family: 'Montserrat', sans-serif; font-size: 14px; }
+    body {
+      background: var(--bg); color: var(--text); font-family: 'Montserrat', -apple-system, sans-serif;
+      font-size: 14px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+    }
     a { color: inherit; text-decoration: none; }
 
+    /* ── Navbar ── */
     .dash-nav {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 20px 40px; border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 20px 40px; border-bottom: 1px solid var(--border);
+      background: rgba(11,11,11,0.95); backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 100;
     }
     .dash-nav h1 { font-size: 18px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; }
-    .dash-nav h1 span { color: #f0ad4e; }
-    .dash-nav-right { display: flex; align-items: center; gap: 24px; }
-    .dash-nav-right span { font-size: 12px; color: #888; }
-    .logout-btn {
-      font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
-      padding: 8px 20px; border: 1px solid #f0ad4e; color: #f0ad4e; cursor: pointer;
-      background: none; transition: all 0.3s;
+    .dash-nav h1 span { color: var(--blue); }
+    .dash-nav-right { display: flex; align-items: center; gap: 24px; position: relative; }
+    .user-name-btn {
+      font-size: 12px; font-weight: 600; color: #fff; cursor: pointer;
+      padding: 8px 16px; border: 1px solid var(--border); border-radius: 6px;
+      background: none; transition: all 0.3s; letter-spacing: 1px;
     }
-    .logout-btn:hover { background: #f0ad4e; color: #000; }
+    .user-name-btn:hover { border-color: var(--blue); color: var(--blue); }
+    .user-dropdown {
+      display: none; position: absolute; top: 100%; right: 0; margin-top: 8px;
+      background: var(--surface); border: 1px solid var(--blue); border-radius: 8px;
+      overflow: hidden; min-width: 160px; z-index: 200;
+      box-shadow: 0 8px 32px rgba(28,105,212,0.2);
+    }
+    .user-dropdown.show { display: block; }
+    .user-dropdown button {
+      width: 100%; padding: 12px 20px; border: none; cursor: pointer;
+      font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+      text-align: left; transition: all 0.2s;
+    }
+    .user-dropdown .dropdown-logout {
+      background: none; color: var(--blue);
+    }
+    .user-dropdown .dropdown-logout:hover { background: var(--blue); color: #fff; }
+    .user-dropdown .dropdown-cancel {
+      background: none; color: var(--text-dim); border-top: 1px solid var(--border);
+    }
+    .user-dropdown .dropdown-cancel:hover { background: rgba(255,255,255,0.05); color: #fff; }
 
     .dash-body { max-width: 1200px; margin: 0 auto; padding: 40px; }
 
+    /* ── Tabs ── */
     .tabs {
-      display: flex; gap: 0; margin-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex; gap: 0; margin-bottom: 32px; border-bottom: 1px solid var(--border);
     }
     .tab {
       padding: 14px 28px; font-size: 11px; font-weight: 700; letter-spacing: 2px;
-      text-transform: uppercase; color: #555; cursor: pointer; border-bottom: 2px solid transparent;
+      text-transform: uppercase; color: var(--text-dim); cursor: pointer; border-bottom: 2px solid transparent;
       transition: all 0.3s;
     }
-    .tab:hover { color: #aaa; }
-    .tab.active { color: #f0ad4e; border-bottom-color: #f0ad4e; }
+    .tab:hover { color: var(--text-muted); }
+    .tab.active { color: var(--blue); border-bottom-color: var(--blue); }
 
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
+    /* ── Sections ── */
     .dash-section { margin-bottom: 40px; }
     .dash-section h2 {
       font-size: 12px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
-      color: #666; margin-bottom: 20px;
+      color: var(--text-dim); margin-bottom: 20px; padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .dash-section h2::before {
+      content: ''; width: 3px; height: 14px; background: var(--blue); display: inline-block;
     }
 
+    /* ── Tables ── */
     .dash-table { width: 100%; border-collapse: collapse; }
     .dash-table th {
       text-align: left; font-size: 10px; font-weight: 600; letter-spacing: 2px;
-      text-transform: uppercase; color: #555; padding: 12px 16px;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
+      text-transform: uppercase; color: var(--text-dim); padding: 12px 16px;
+      border-bottom: 1px solid var(--border); background: var(--surface);
     }
     .dash-table td {
-      padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.04);
-      font-size: 13px; color: #ccc;
+      padding: 14px 16px; border-bottom: 1px solid var(--border);
+      font-size: 13px; color: var(--text-muted); transition: background 0.2s;
     }
-    .dash-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .dash-table tr:hover td { background: var(--blue-glow); }
 
     .badge {
       display: inline-block; padding: 4px 12px; font-size: 10px; font-weight: 700;
       letter-spacing: 1px; text-transform: uppercase;
     }
-    .badge-pending { border: 1px solid #f0ad4e; color: #f0ad4e; }
-    .badge-approved { border: 1px solid #4da6e8; color: #4da6e8; }
-    .badge-rejected { border: 1px solid #c0392b; color: #c0392b; }
+    .badge-pending { border: 1px solid var(--blue-light); color: var(--blue-light); }
+    .badge-approved { border: 1px solid var(--blue); color: var(--blue); }
+    .badge-rejected { border: 1px solid var(--danger); color: var(--danger); }
 
+    /* ── Action Buttons ── */
     .action-btn {
       padding: 5px 14px; font-size: 10px; font-weight: 700; letter-spacing: 1px;
       text-transform: uppercase; cursor: pointer; border: none; transition: all 0.3s;
       margin-right: 6px;
     }
-    .approve-btn { background: #4da6e8; color: #fff; }
-    .approve-btn:hover { background: #3a8fd0; }
-    .reject-btn { background: none; border: 1px solid #c0392b; color: #c0392b; }
-    .reject-btn:hover { background: #c0392b; color: #fff; }
+    .approve-btn { background: var(--blue); color: #fff; }
+    .approve-btn:hover { background: #1554a8; box-shadow: 0 4px 20px var(--blue-glow); }
+    .reject-btn { background: none; border: 1px solid var(--danger); color: var(--danger); }
+    .reject-btn:hover { background: var(--danger); color: #fff; }
 
-    /* Reviews */
+    /* ── Reviews ── */
     .review-card {
-      background: #111; border: 1px solid rgba(255,255,255,0.06); padding: 24px;
-      margin-bottom: 16px;
+      background: var(--surface); border: 1px solid var(--border); padding: 24px;
+      margin-bottom: 16px; transition: border-color 0.3s;
     }
+    .review-card:hover { border-color: var(--border-hover); }
     .review-card .review-header {
       display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
     }
     .review-card .review-header h4 { font-size: 14px; font-weight: 700; }
-    .review-card .review-header span { font-size: 11px; color: #555; }
-    .review-card .review-body { color: #aaa; font-size: 13px; line-height: 1.7; margin-bottom: 16px; font-style: italic; }
-    .review-card .review-reply { background: rgba(255,255,255,0.03); padding: 14px; border-left: 2px solid #f0ad4e; margin-top: 12px; }
-    .review-card .review-reply p { font-size: 12px; color: #888; }
-    .review-card .review-reply strong { color: #f0ad4e; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; }
+    .review-card .review-header span { font-size: 11px; color: var(--text-dim); }
+    .review-card .review-body { color: var(--text-muted); font-size: 13px; line-height: 1.7; margin-bottom: 16px; font-style: italic; }
+    .review-card .review-reply { background: rgba(255,255,255,0.03); padding: 14px; border-left: 2px solid var(--blue); margin-top: 12px; }
+    .review-card .review-reply p { font-size: 12px; color: var(--text-dim); }
+    .review-card .review-reply strong { color: var(--blue); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; }
 
     .reply-form { display: flex; gap: 8px; margin-top: 12px; }
     .reply-form input {
-      flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
-      color: #fff; padding: 10px 14px; font-size: 13px; font-family: inherit; outline: none;
+      flex: 1; background: var(--surface2); border: 1px solid var(--border);
+      color: var(--text); padding: 10px 14px; font-size: 13px; font-family: inherit; outline: none;
+      transition: border-color 0.3s;
     }
-    .reply-form input:focus { border-color: #f0ad4e; }
-    .reply-form input::placeholder { color: #555; }
+    .reply-form input:focus { border-color: var(--blue); box-shadow: 0 0 0 1px var(--blue-glow); }
+    .reply-form input::placeholder { color: var(--text-dim); }
     .reply-form button {
-      background: #f0ad4e; color: #000; border: none; padding: 10px 20px;
+      background: var(--blue); color: #fff; border: none; padding: 10px 20px;
       font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
-      cursor: pointer; transition: background 0.3s;
+      cursor: pointer; transition: all 0.3s;
     }
-    .reply-form button:hover { background: #e09a3e; }
+    .reply-form button:hover { background: #1554a8; box-shadow: 0 4px 20px var(--blue-glow); }
 
-    .empty { color: #555; font-size: 13px; padding: 20px 0; }
+    .empty { color: var(--text-dim); font-size: 13px; padding: 20px 0; }
+
+    /* ── Profile Section ── */
+    .profile-section {
+      display: grid; grid-template-columns: 320px 1fr; gap: 32px;
+      margin-bottom: 48px;
+    }
+    .profile-card {
+      background: var(--surface); border: 1px solid var(--border);
+      padding: 32px; display: flex; flex-direction: column; align-items: center;
+    }
+    .profile-pic-wrap {
+      width: 100px; height: 100px; border-radius: 50%; overflow: hidden;
+      border: 2px solid var(--blue); margin-bottom: 20px; position: relative;
+      cursor: pointer;
+    }
+    .profile-pic-wrap img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .profile-pic-wrap .pic-overlay {
+      position: absolute; inset: 0; background: rgba(0,0,0,0.6);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 0.3s; font-size: 10px;
+      font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--blue-light);
+    }
+    .profile-pic-wrap:hover .pic-overlay { opacity: 1; }
+    .profile-pic-wrap input { display: none; }
+    .profile-name { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+    .profile-role { font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--blue); margin-bottom: 20px; }
+
+    .profile-info { width: 100%; }
+    .profile-info-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .profile-info-row:last-child { border-bottom: none; }
+    .profile-info-row .info-label {
+      font-size: 10px; font-weight: 600; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--text-dim);
+    }
+    .profile-info-row .info-value {
+      font-size: 13px; font-weight: 600; color: var(--text-muted);
+    }
+    .profile-info-row .info-value.highlight { color: var(--blue); font-size: 15px; font-weight: 800; }
+
+    /* ── Sales Chart ── */
+    .chart-card {
+      background: var(--surface); border: 1px solid var(--border);
+      padding: 32px;
+    }
+    .chart-card h3 {
+      font-size: 12px; font-weight: 700; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--text-dim); margin-bottom: 24px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .chart-card h3::before {
+      content: ''; width: 3px; height: 14px; background: var(--blue); display: inline-block;
+    }
+    .chart-wrap { position: relative; height: 260px; }
+
+    .chart-total {
+      display: flex; gap: 32px; margin-top: 24px;
+      padding-top: 20px; border-top: 1px solid var(--border);
+    }
+    .chart-total-item .ct-num { font-size: 28px; font-weight: 800; color: var(--blue); }
+    .chart-total-item .ct-lbl {
+      font-size: 9px; font-weight: 600; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--text-dim); margin-top: 2px;
+    }
 
     @media (max-width: 768px) {
       .dash-body { padding: 24px 20px; }
+      .profile-section { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
   <nav class="dash-nav">
-    <h1>BMW <span>Sales</span></h1>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <svg width="36" height="36" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="48" fill="#111" stroke="#333" stroke-width="1.5"/>
+        <circle cx="50" cy="50" r="32" fill="#fff"/>
+        <path d="M50 18 A32 32 0 0 1 82 50 L50 50 Z" fill="#1C69D4"/>
+        <path d="M18 50 A32 32 0 0 1 50 18 L50 50 Z" fill="#fff"/>
+        <path d="M50 82 A32 32 0 0 1 18 50 L50 50 Z" fill="#1C69D4"/>
+        <path d="M82 50 A32 32 0 0 1 50 82 L50 50 Z" fill="#fff"/>
+        <circle cx="50" cy="50" r="32" stroke="#fff" stroke-width="1.5" fill="none"/>
+        <circle cx="50" cy="50" r="48" stroke="#333" stroke-width="1.5" fill="none"/>
+      </svg>
+      <h1>BMW <span>Sales</span></h1>
+    </div>
     <div class="dash-nav-right">
-      <span id="sales-email"></span>
-      <button class="logout-btn" onclick="logout()">Logout</button>
+      <button class="user-name-btn" id="user-name-btn" onclick="toggleDropdown()"></button>
+      <div class="user-dropdown" id="user-dropdown">
+        <button class="dropdown-logout" onclick="logout()">Logout</button>
+        <button class="dropdown-cancel" onclick="toggleDropdown()">Cancel</button>
+      </div>
     </div>
   </nav>
 
   <div class="dash-body">
+
+    <!-- Profile Section -->
+    <div class="profile-section">
+      <div class="profile-card">
+        <label class="profile-pic-wrap" id="pic-wrap">
+          <img id="profile-pic" src="https://ui-avatars.com/api/?name=S&background=1C69D4&color=000&size=200&bold=true" alt="Profile" />
+          <div class="pic-overlay">Change</div>
+          <input type="file" id="pic-input" accept="image/*" />
+        </label>
+        <div class="profile-name" id="profile-name">—</div>
+        <div class="profile-role">Sales Executive</div>
+        <div class="profile-info">
+          <div class="profile-info-row">
+            <span class="info-label">Email</span>
+            <span class="info-value" id="profile-email">—</span>
+          </div>
+          <div class="profile-info-row">
+            <span class="info-label">Serving Since</span>
+            <span class="info-value" id="profile-tenure">—</span>
+          </div>
+          <div class="profile-info-row">
+            <span class="info-label">Salary</span>
+            <span class="info-value highlight" id="profile-salary">—</span>
+          </div>
+          <div class="profile-info-row">
+            <span class="info-label">Total Sales</span>
+            <span class="info-value highlight" id="profile-total-sales">0</span>
+          </div>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>Monthly Sales Performance</h3>
+        <div class="chart-wrap">
+          <canvas id="sales-chart"></canvas>
+        </div>
+        <div class="chart-total">
+          <div class="chart-total-item">
+            <div class="ct-num" id="ct-total">0</div>
+            <div class="ct-lbl">Total Closed</div>
+          </div>
+          <div class="chart-total-item">
+            <div class="ct-num" id="ct-best">0</div>
+            <div class="ct-lbl">Best Month</div>
+          </div>
+          <div class="chart-total-item">
+            <div class="ct-num" id="ct-avg">0</div>
+            <div class="ct-lbl">Monthly Avg</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="tabs">
       <div class="tab active" onclick="switchTab('drives')">Test Drives</div>
       <div class="tab" onclick="switchTab('reviews')">Reviews</div>
@@ -157,7 +345,18 @@
       window.location.href = '/index.html';
     }
 
-    document.getElementById('sales-email').textContent = user?.email || '';
+    document.getElementById('user-name-btn').textContent = user?.name || user?.email || '';
+
+    function toggleDropdown() {
+      document.getElementById('user-dropdown').classList.toggle('show');
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.dash-nav-right')) {
+        document.getElementById('user-dropdown').classList.remove('show');
+      }
+    });
 
     function logout() {
       localStorage.removeItem('bmw_user');
@@ -240,6 +439,101 @@
       loadReviews();
     }
 
+    // ── Profile ──
+    let salesChart = null;
+
+    async function loadProfile() {
+      const res = await fetch(API + '/salesman-profile?id=' + user.id);
+      const p = await res.json();
+
+      document.getElementById('profile-name').textContent = p.name;
+      document.getElementById('profile-email').textContent = p.email;
+      document.getElementById('profile-tenure').textContent = p.tenure;
+      document.getElementById('profile-salary').textContent = p.salary || 'Not set';
+      document.getElementById('profile-total-sales').textContent = p.totalSales;
+
+      if (p.profile_pic) {
+        document.getElementById('profile-pic').src = '/' + p.profile_pic;
+      } else {
+        document.getElementById('profile-pic').src =
+          `https://ui-avatars.com/api/?name=${encodeURIComponent(p.name)}&background=1C69D4&color=000&size=200&bold=true`;
+      }
+
+      // Chart stats
+      const total = p.totalSales;
+      const best = Math.max(...p.monthlySales.map(m => m.count), 0);
+      const avg = p.monthlySales.length ? (total / p.monthlySales.length).toFixed(1) : 0;
+      document.getElementById('ct-total').textContent = total;
+      document.getElementById('ct-best').textContent = best;
+      document.getElementById('ct-avg').textContent = avg;
+
+      // Render chart
+      const ctx = document.getElementById('sales-chart').getContext('2d');
+      if (salesChart) salesChart.destroy();
+
+      salesChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: p.monthlySales.map(m => m.label),
+          datasets: [{
+            label: 'Cars Sold',
+            data: p.monthlySales.map(m => m.count),
+            backgroundColor: 'rgba(28, 105, 212, 0.25)',
+            borderColor: '#1C69D4',
+            borderWidth: 2,
+            borderRadius: 4,
+            hoverBackgroundColor: 'rgba(28, 105, 212, 0.5)',
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#111',
+              borderColor: 'rgba(255,255,255,0.1)',
+              borderWidth: 1,
+              titleFont: { family: 'Montserrat', size: 11, weight: '600' },
+              bodyFont: { family: 'Montserrat', size: 12 },
+              padding: 12,
+              cornerRadius: 0,
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: 'rgba(255,255,255,0.04)' },
+              ticks: {
+                font: { family: 'Montserrat', size: 10, weight: '600' },
+                color: '#555'
+              }
+            },
+            y: {
+              beginAtZero: true,
+              grid: { color: 'rgba(255,255,255,0.04)' },
+              ticks: {
+                font: { family: 'Montserrat', size: 10, weight: '600' },
+                color: '#555',
+                stepSize: 1
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Profile pic upload — save as file on server
+    document.getElementById('pic-input').addEventListener('change', async function() {
+      const file = this.files[0];
+      if (!file) return;
+      document.getElementById('profile-pic').src = URL.createObjectURL(file);
+      const formData = new FormData();
+      formData.append('id', user.id);
+      formData.append('profile_pic', file);
+      await fetch(API + '/salesman-profile-pic', { method: 'POST', body: formData });
+    });
+
+    loadProfile();
     loadTestDrives();
     loadReviews();
   </script>

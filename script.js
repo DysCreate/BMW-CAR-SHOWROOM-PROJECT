@@ -281,11 +281,11 @@ const authClose = document.getElementById('auth-close');
 const loginForm = document.getElementById('login-form');
 const registerForm = document.getElementById('register-form');
 
-loginBtn.addEventListener('click', (e) => {
+function openAuthModal(e) {
   e.preventDefault();
   authOverlay.classList.add('active');
   showLogin();
-});
+}
 
 authClose.addEventListener('click', () => {
   authOverlay.classList.remove('active');
@@ -310,37 +310,29 @@ function showRegister() {
 const API = window.location.origin + '/api';
 
 // Check if user is already logged in — update nav
-function updateNavForUser() {
-  const u = JSON.parse(localStorage.getItem('bmw_user') || 'null');
-  if (u && loginBtn) {
-    loginBtn.innerHTML = `
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
-        <circle cx="12" cy="7" r="4"/>
-      </svg>
-      ${u.name}
-    `;
-    loginBtn.removeEventListener('click', openAuthModal);
-    loginBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (confirm('Logout?')) {
-        localStorage.removeItem('bmw_user');
-        window.location.reload();
-      }
-    });
-  }
-}
+const u = JSON.parse(localStorage.getItem('bmw_user') || 'null');
+if (u && loginBtn) {
+  loginBtn.innerHTML = `
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+      <circle cx="12" cy="7" r="4"/>
+    </svg>
+    ${u.name}
+  `;
+  loginBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    document.getElementById('nav-user-dropdown').classList.toggle('show');
+  });
 
-function openAuthModal(e) {
-  e.preventDefault();
-  authOverlay.classList.add('active');
-  showLogin();
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.nav-user-wrap')) {
+      const dd = document.getElementById('nav-user-dropdown');
+      if (dd) dd.classList.remove('show');
+    }
+  });
+} else {
+  loginBtn.addEventListener('click', openAuthModal);
 }
-
-// Re-bind login button
-loginBtn.removeEventListener('click', openAuthModal);
-loginBtn.addEventListener('click', openAuthModal);
-updateNavForUser();
 
 async function handleLogin(e) {
   e.preventDefault();

@@ -6,102 +6,250 @@
   <title>BMW Admin Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
   <style>
+    :root {
+      --bg: #0b0b0b;
+      --surface: #111111;
+      --surface2: #1a1a1a;
+      --border: rgba(255,255,255,0.06);
+      --border-hover: rgba(255,255,255,0.12);
+      --blue: #1C69D4;
+      --blue-glow: rgba(28,105,212,0.15);
+      --blue-light: #4da6e8;
+      --text: #ffffff;
+      --text-muted: #aaaaaa;
+      --text-dim: #666666;
+      --danger: #c0392b;
+    }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #0b0b0b; color: #fff; font-family: 'Montserrat', sans-serif; font-size: 14px; }
+    body {
+      background: var(--bg); color: var(--text); font-family: 'Montserrat', -apple-system, sans-serif;
+      font-size: 14px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+    }
     a { color: inherit; text-decoration: none; }
 
+    /* ── Navbar ── */
     .dash-nav {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 20px 40px; border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 20px 40px; border-bottom: 1px solid var(--border);
+      background: rgba(11,11,11,0.95); backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 100;
     }
     .dash-nav h1 { font-size: 18px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; }
-    .dash-nav h1 span { color: #4da6e8; }
-    .dash-nav-right { display: flex; align-items: center; gap: 24px; }
-    .dash-nav-right span { font-size: 12px; color: #888; }
-    .logout-btn {
-      font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
-      padding: 8px 20px; border: 1px solid #4da6e8; color: #4da6e8; cursor: pointer;
-      background: none; transition: all 0.3s;
+    .dash-nav h1 span { color: var(--blue); }
+    .dash-nav-right { display: flex; align-items: center; gap: 24px; position: relative; }
+    .user-name-btn {
+      font-size: 12px; font-weight: 600; color: #fff; cursor: pointer;
+      padding: 8px 16px; border: 1px solid var(--border); border-radius: 6px;
+      background: none; transition: all 0.3s; letter-spacing: 1px;
     }
-    .logout-btn:hover { background: #4da6e8; color: #000; }
+    .user-name-btn:hover { border-color: var(--blue); color: var(--blue); }
+    .user-dropdown {
+      display: none; position: absolute; top: 100%; right: 0; margin-top: 8px;
+      background: var(--surface); border: 1px solid var(--blue); border-radius: 8px;
+      overflow: hidden; min-width: 160px; z-index: 200;
+      box-shadow: 0 8px 32px rgba(28,105,212,0.2);
+    }
+    .user-dropdown.show { display: block; }
+    .user-dropdown button {
+      width: 100%; padding: 12px 20px; border: none; cursor: pointer;
+      font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+      text-align: left; transition: all 0.2s;
+    }
+    .user-dropdown .dropdown-logout {
+      background: none; color: var(--blue);
+    }
+    .user-dropdown .dropdown-logout:hover { background: var(--blue); color: #fff; }
+    .user-dropdown .dropdown-cancel {
+      background: none; color: var(--text-dim); border-top: 1px solid var(--border);
+    }
+    .user-dropdown .dropdown-cancel:hover { background: rgba(255,255,255,0.05); color: #fff; }
 
     .dash-body { max-width: 1200px; margin: 0 auto; padding: 40px; }
 
-    /* Stats grid */
+    /* ── Stats Grid ── */
     .stats-grid {
       display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 48px;
     }
     .stat-card {
-      background: #111; border: 1px solid rgba(255,255,255,0.06); padding: 28px 24px;
+      background: var(--surface); border: 1px solid var(--border); padding: 28px 24px;
+      position: relative; overflow: hidden; transition: border-color 0.3s;
     }
-    .stat-card .num { font-size: 36px; font-weight: 800; color: #fff; }
-    .stat-card .num.blue { color: #4da6e8; }
-    .stat-card .label { font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: #666; margin-top: 8px; }
+    .stat-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--blue), transparent);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .stat-card:hover { border-color: var(--border-hover); }
+    .stat-card:hover::before { opacity: 1; }
+    .stat-card .num { font-size: 36px; font-weight: 800; color: var(--text); }
+    .stat-card .num.blue { color: var(--blue); }
+    .stat-card .label {
+      font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--text-dim); margin-top: 8px;
+    }
 
-    /* Section */
+    /* ── Sections ── */
     .dash-section { margin-bottom: 48px; }
     .dash-section h2 {
       font-size: 12px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
-      color: #666; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.06);
+      color: var(--text-dim); margin-bottom: 20px; padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .dash-section h2::before {
+      content: ''; width: 3px; height: 14px; background: var(--blue); display: inline-block;
     }
 
-    /* Table */
+    /* ── Tables ── */
     .dash-table { width: 100%; border-collapse: collapse; }
     .dash-table th {
       text-align: left; font-size: 10px; font-weight: 600; letter-spacing: 2px;
-      text-transform: uppercase; color: #555; padding: 12px 16px;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
+      text-transform: uppercase; color: var(--text-dim); padding: 12px 16px;
+      border-bottom: 1px solid var(--border); background: var(--surface);
     }
     .dash-table td {
-      padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.04);
-      font-size: 13px; color: #ccc;
+      padding: 14px 16px; border-bottom: 1px solid var(--border);
+      font-size: 13px; color: var(--text-muted); transition: background 0.2s;
     }
-    .dash-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .dash-table tr:hover td { background: var(--blue-glow); }
 
     .badge {
       display: inline-block; padding: 4px 12px; font-size: 10px; font-weight: 700;
       letter-spacing: 1px; text-transform: uppercase;
     }
-    .badge-admin { border: 1px solid #4da6e8; color: #4da6e8; }
-    .badge-salesman { border: 1px solid #f0ad4e; color: #f0ad4e; }
-    .badge-customer { border: 1px solid #888; color: #888; }
+    .badge-admin { border: 1px solid var(--blue); color: var(--blue); }
+    .badge-salesman { border: 1px solid var(--blue-light); color: var(--blue-light); }
+    .badge-customer { border: 1px solid var(--text-dim); color: var(--text-dim); }
 
-    /* Add car form */
+    /* ── Add Car Form ── */
     .add-car-form {
       display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap;
     }
     .add-car-form input {
-      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
-      color: #fff; padding: 12px 16px; font-size: 13px; font-family: inherit; outline: none;
-      flex: 1; min-width: 150px;
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--text); padding: 12px 16px; font-size: 13px; font-family: inherit; outline: none;
+      flex: 1; min-width: 150px; transition: border-color 0.3s;
     }
-    .add-car-form input:focus { border-color: #4da6e8; }
-    .add-car-form input::placeholder { color: #555; }
+    .add-car-form input:focus { border-color: var(--blue); box-shadow: 0 0 0 1px var(--blue-glow); }
+    .add-car-form input::placeholder { color: var(--text-dim); }
     .add-car-form button {
-      background: #4da6e8; color: #fff; border: none; padding: 12px 28px;
+      background: var(--blue); color: #fff; border: none; padding: 12px 28px;
       font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
-      cursor: pointer; transition: background 0.3s;
+      cursor: pointer; transition: all 0.3s;
     }
-    .add-car-form button:hover { background: #3a8fd0; }
+    .add-car-form button:hover { background: #1554a8; box-shadow: 0 4px 20px var(--blue-glow); }
+
+    .file-upload-label {
+      display: flex; align-items: center; justify-content: center;
+      padding: 12px 20px; border: 1px dashed rgba(255,255,255,0.15);
+      cursor: pointer; transition: all 0.3s; min-width: 150px;
+    }
+    .file-upload-label:hover { border-color: var(--blue); }
+    .file-upload-label input[type="file"] { display: none; }
+    .file-upload-label span {
+      font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--text-dim);
+    }
+    .file-upload-label.has-file { border-color: var(--blue); }
+    .file-upload-label.has-file span { color: var(--blue); }
+
+    .car-thumb { width: 40px; height: 28px; object-fit: cover; border: 1px solid var(--border); }
 
     .delete-btn {
-      background: none; border: 1px solid #c0392b; color: #c0392b; padding: 4px 14px;
+      background: none; border: 1px solid var(--danger); color: var(--danger); padding: 4px 14px;
       font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
       cursor: pointer; transition: all 0.3s;
     }
-    .delete-btn:hover { background: #c0392b; color: #fff; }
+    .delete-btn:hover { background: var(--danger); color: #fff; }
 
-    /* Salesman perf */
-    .perf-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
-    .perf-card {
-      background: #111; border: 1px solid rgba(255,255,255,0.06); padding: 24px;
+    /* ── Auto-fetch Preview ── */
+    .auto-fetch-row {
+      display: flex; align-items: center; gap: 16px; margin-bottom: 20px;
+      padding: 16px; background: var(--surface); border: 1px solid var(--border);
+      border-left: 3px solid var(--blue); display: none;
     }
-    .perf-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
-    .perf-card p { font-size: 12px; color: #666; margin-bottom: 12px; }
-    .perf-card .perf-stats { display: flex; gap: 24px; }
-    .perf-card .perf-stat .num { font-size: 24px; font-weight: 800; }
-    .perf-card .perf-stat .lbl { font-size: 10px; color: #666; letter-spacing: 1px; text-transform: uppercase; }
+    .auto-fetch-row.visible { display: flex; }
+    .auto-preview-img {
+      width: 120px; height: 72px; object-fit: cover; border: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .auto-fetch-info { flex: 1; }
+    .auto-fetch-info .auto-model { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .auto-fetch-info .auto-badge-tag {
+      display: inline-block; padding: 3px 10px; font-size: 9px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase; border: 1px solid var(--blue); color: var(--blue);
+    }
+    .auto-fetch-info .auto-badge-tag.m-series { border-color: #c0392b; color: #c0392b; }
+    .auto-fetch-info .auto-badge-tag.x-series { border-color: #2980b9; color: #2980b9; }
+    .auto-fetch-info .auto-badge-tag.i-series { border-color: #2ecc71; color: #2ecc71; }
+    .auto-fetch-info .auto-badge-tag.z-series { border-color: #9b59b6; color: #9b59b6; }
+    .auto-fetch-hint { font-size: 10px; color: var(--text-dim); margin-top: 6px; }
+    .auto-fetch-hint span { color: var(--blue); }
+
+    /* ── Salesman Performance ── */
+    .perf-grid { display: flex; flex-direction: column; gap: 24px; }
+    .perf-card {
+      background: var(--surface); border: 1px solid var(--border); padding: 0;
+      transition: border-color 0.3s; overflow: hidden;
+    }
+    .perf-card:hover { border-color: var(--border-hover); }
+    .perf-header {
+      display: flex; align-items: center; gap: 20px; padding: 24px 28px;
+      border-bottom: 1px solid var(--border); cursor: pointer;
+    }
+    .perf-avatar {
+      width: 48px; height: 48px; border-radius: 50%; object-fit: cover;
+      border: 2px solid var(--blue);
+    }
+    .perf-info { flex: 1; }
+    .perf-info h4 { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+    .perf-info p { font-size: 12px; color: var(--text-dim); margin: 0; }
+    .perf-header-stats { display: flex; gap: 28px; }
+    .perf-header-stats .perf-stat { text-align: center; }
+    .perf-header-stats .perf-stat .num { font-size: 22px; font-weight: 800; color: var(--blue); }
+    .perf-header-stats .perf-stat .lbl { font-size: 9px; color: var(--text-dim); letter-spacing: 1px; text-transform: uppercase; }
+    .perf-toggle {
+      font-size: 18px; color: var(--text-dim); transition: transform 0.3s; margin-left: 12px;
+    }
+    .perf-card.expanded .perf-toggle { transform: rotate(180deg); }
+
+    .perf-body {
+      max-height: 0; overflow: hidden; transition: max-height 0.4s ease;
+    }
+    .perf-card.expanded .perf-body { max-height: 500px; }
+    .perf-body-inner {
+      display: grid; grid-template-columns: 260px 1fr; gap: 24px;
+      padding: 24px 28px;
+    }
+    .perf-details { display: flex; flex-direction: column; gap: 14px; }
+    .perf-detail-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .perf-detail-row .pd-label {
+      font-size: 10px; font-weight: 600; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--text-dim);
+    }
+    .perf-detail-row .pd-value { font-size: 13px; font-weight: 600; color: var(--text-muted); }
+    .perf-detail-row .pd-value.highlight { color: var(--blue); font-weight: 800; }
+    .salary-edit {
+      display: flex; gap: 6px; align-items: center;
+    }
+    .salary-edit input {
+      background: var(--surface2); border: 1px solid var(--border); color: var(--text);
+      padding: 6px 10px; font-size: 12px; font-family: inherit; outline: none;
+      width: 120px; transition: border-color 0.3s;
+    }
+    .salary-edit input:focus { border-color: var(--blue); }
+    .salary-edit button {
+      background: var(--blue); color: #fff; border: none; padding: 6px 12px;
+      font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+      cursor: pointer; transition: background 0.3s;
+    }
+    .salary-edit button:hover { background: #1554a8; }
+    .perf-chart-wrap { height: 220px; position: relative; }
 
     @media (max-width: 768px) {
       .stats-grid { grid-template-columns: repeat(2, 1fr); }
@@ -112,10 +260,25 @@
 </head>
 <body>
   <nav class="dash-nav">
-    <h1>BMW <span>Admin</span></h1>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <svg width="36" height="36" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="48" fill="#111" stroke="#333" stroke-width="1.5"/>
+        <circle cx="50" cy="50" r="32" fill="#fff"/>
+        <path d="M50 18 A32 32 0 0 1 82 50 L50 50 Z" fill="#1C69D4"/>
+        <path d="M18 50 A32 32 0 0 1 50 18 L50 50 Z" fill="#fff"/>
+        <path d="M50 82 A32 32 0 0 1 18 50 L50 50 Z" fill="#1C69D4"/>
+        <path d="M82 50 A32 32 0 0 1 50 82 L50 50 Z" fill="#fff"/>
+        <circle cx="50" cy="50" r="32" stroke="#fff" stroke-width="1.5" fill="none"/>
+        <circle cx="50" cy="50" r="48" stroke="#333" stroke-width="1.5" fill="none"/>
+      </svg>
+      <h1>BMW <span>Admin</span></h1>
+    </div>
     <div class="dash-nav-right">
-      <span id="admin-email"></span>
-      <button class="logout-btn" onclick="logout()">Logout</button>
+      <button class="user-name-btn" id="user-name-btn" onclick="toggleDropdown()"></button>
+      <div class="user-dropdown" id="user-dropdown">
+        <button class="dropdown-logout" onclick="logout()">Logout</button>
+        <button class="dropdown-cancel" onclick="toggleDropdown()">Cancel</button>
+      </div>
     </div>
   </nav>
 
@@ -136,11 +299,24 @@
       <form class="add-car-form" onsubmit="addCar(event)">
         <input type="text" id="car-name" placeholder="Model name (e.g. BMW M4)" required />
         <input type="text" id="car-price" placeholder="Price (e.g. 85 L)" required />
-        <input type="text" id="car-image" placeholder="Image filename (optional)" />
+        <input type="hidden" id="car-badge" />
+        <input type="hidden" id="car-auto-image" />
+        <label class="file-upload-label">
+          <input type="file" id="car-image" accept="image/*" />
+          <span id="file-name">Choose Image</span>
+        </label>
         <button type="submit">Add Car</button>
       </form>
+      <div class="auto-fetch-row" id="auto-fetch-row">
+        <img class="auto-preview-img" id="auto-preview-img" src="" alt="Preview" />
+        <div class="auto-fetch-info">
+          <div class="auto-model" id="auto-model-name"></div>
+          <span class="auto-badge-tag" id="auto-badge-tag"></span>
+          <div class="auto-fetch-hint">Auto-detected — <span>upload your own image to override</span></div>
+        </div>
+      </div>
       <table class="dash-table">
-        <thead><tr><th>Model</th><th>Price</th><th>Image</th><th>Action</th></tr></thead>
+        <thead><tr><th>Model</th><th>Price</th><th>Badge</th><th>Image</th><th>Action</th></tr></thead>
         <tbody id="cars-table"></tbody>
       </table>
     </div>
@@ -173,12 +349,113 @@
       window.location.href = '/index.html';
     }
 
-    document.getElementById('admin-email').textContent = user?.email || '';
+    document.getElementById('user-name-btn').textContent = user?.name || user?.email || '';
+
+    function toggleDropdown() {
+      document.getElementById('user-dropdown').classList.toggle('show');
+    }
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.dash-nav-right')) {
+        document.getElementById('user-dropdown').classList.remove('show');
+      }
+    });
 
     function logout() {
       localStorage.removeItem('bmw_user');
       window.location.href = '/index.html';
     }
+
+    // ── BMW Model Lookup: Wikimedia Commons verified images + auto badge ──
+    const BMW_MODELS = {
+      // M Series
+      'm2':  { img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/BMW_G87_M2_1X7A1838.jpg/800px-BMW_G87_M2_1X7A1838.jpg', badge: 'M Series' },
+      'm3':  { img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/BMW_M3_Competition_%28G80%29_IMG_4041.jpg/800px-BMW_M3_Competition_%28G80%29_IMG_4041.jpg', badge: 'M Series' },
+      'm4':  { img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/BMW_M4_%28G82%29_1X7A0155.jpg/800px-BMW_M4_%28G82%29_1X7A0155.jpg', badge: 'M Series' },
+      'm5':  { img: 'https://upload.wikimedia.org/wikipedia/commons/9/9d/BMW_M5_%28G90%29_IMG_3266.jpg', badge: 'M Series' },
+      'm8':  { img: 'https://upload.wikimedia.org/wikipedia/commons/b/bd/BMW_M8_Competition_IMG_3364.jpg', badge: 'M Series' },
+      // Standard Series
+      '3 series': { img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/BMW_G20_%282022%29_IMG_7316_%282%29.jpg/800px-BMW_G20_%282022%29_IMG_7316_%282%29.jpg', badge: '3 Series' },
+      '5 series': { img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/BMW_G60_520i_1X7A2443.jpg/800px-BMW_G60_520i_1X7A2443.jpg', badge: '5 Series' },
+      '7 series': { img: 'https://upload.wikimedia.org/wikipedia/commons/e/e4/BMW_G70_740d_1X7A7230.jpg', badge: '7 Series' },
+      // X Series
+      'x1':  { img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/BMW_X1_%28U11%29_%E2%80%93_f_15122024.jpg/800px-BMW_X1_%28U11%29_%E2%80%93_f_15122024.jpg', badge: 'X Series' },
+      'x3':  { img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/BMW_G45_20_IMG_3794.jpg/800px-BMW_G45_20_IMG_3794.jpg', badge: 'X Series' },
+      'x5':  { img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/2019_BMW_X5_xDrive30d_M_Sport_Automatic_3.0_Front.jpg/800px-2019_BMW_X5_xDrive30d_M_Sport_Automatic_3.0_Front.jpg', badge: 'X Series' },
+      'x6':  { img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/BMW_G06_IMG_3142.jpg/800px-BMW_G06_IMG_3142.jpg', badge: 'X Series' },
+      'x7':  { img: 'https://upload.wikimedia.org/wikipedia/commons/f/fe/BMW_G07_%282022%29_1X7A6186.jpg', badge: 'X Series' },
+      'xm':  { img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/BMW_XM_%28G09%29_IMG_7778.jpg/800px-BMW_XM_%28G09%29_IMG_7778.jpg', badge: 'X Series' },
+      // i Series (Electric)
+      'i4':  { img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/BMW_i4_IMG_6695.jpg/800px-BMW_i4_IMG_6695.jpg', badge: 'i Series' },
+      'i5':  { img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/BMW_i5_1X7A1826.jpg/800px-BMW_i5_1X7A1826.jpg', badge: 'i Series' },
+      'i7':  { img: 'https://upload.wikimedia.org/wikipedia/commons/0/0a/BMW_i7_xDrive60_1X7A7476.jpg', badge: 'i Series' },
+      'ix':  { img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/BMW_iX_IAA_2021_1X7A0204.jpg/800px-BMW_iX_IAA_2021_1X7A0204.jpg', badge: 'i Series' },
+      // Z Series
+      'z4':  { img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/BMW_G29_Z4_M40i_%28Facelift%29_1X7A6946.jpg/800px-BMW_G29_Z4_M40i_%28Facelift%29_1X7A6946.jpg', badge: 'Z Series' },
+    };
+
+    function detectModel(input) {
+      const text = input.toLowerCase().replace('bmw', '').trim();
+      // Try exact match first
+      if (BMW_MODELS[text]) return { key: text, ...BMW_MODELS[text] };
+      // Try partial match (e.g. "m4 competition" matches "m4")
+      for (const key of Object.keys(BMW_MODELS)) {
+        if (text.startsWith(key) || text.includes(key)) {
+          return { key, ...BMW_MODELS[key] };
+        }
+      }
+      // Fallback badge detection from name pattern
+      if (/\bm\d/i.test(text)) return { key: null, img: null, badge: 'M Series' };
+      if (/\bx\d/i.test(text)) return { key: null, img: null, badge: 'X Series' };
+      if (/\bi\d|ix/i.test(text)) return { key: null, img: null, badge: 'i Series' };
+      if (/\bz\d/i.test(text)) return { key: null, img: null, badge: 'Z Series' };
+      if (/\d\s*series/i.test(text)) {
+        const num = text.match(/(\d)\s*series/i)[1];
+        return { key: null, img: null, badge: num + ' Series' };
+      }
+      return null;
+    }
+
+    // Auto-fetch on model name input
+    const carNameInput = document.getElementById('car-name');
+    const autoRow = document.getElementById('auto-fetch-row');
+    const autoImg = document.getElementById('auto-preview-img');
+    const autoModelName = document.getElementById('auto-model-name');
+    const autoBadgeTag = document.getElementById('auto-badge-tag');
+    const carBadgeInput = document.getElementById('car-badge');
+    const carAutoImageInput = document.getElementById('car-auto-image');
+
+    let debounceTimer;
+    carNameInput.addEventListener('input', function() {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        const match = detectModel(this.value);
+        if (match) {
+          autoRow.classList.add('visible');
+          autoModelName.textContent = this.value;
+          autoBadgeTag.textContent = match.badge;
+          autoBadgeTag.className = 'auto-badge-tag ' +
+            (match.badge.startsWith('M') ? 'm-series' :
+             match.badge.startsWith('X') ? 'x-series' :
+             match.badge.startsWith('i') ? 'i-series' :
+             match.badge.startsWith('Z') ? 'z-series' : '');
+          carBadgeInput.value = match.badge;
+
+          if (match.img) {
+            autoImg.src = '/' + match.img;
+            autoImg.style.display = 'block';
+            carAutoImageInput.value = match.img;
+          } else {
+            autoImg.style.display = 'none';
+            carAutoImageInput.value = '';
+          }
+        } else {
+          autoRow.classList.remove('visible');
+          carBadgeInput.value = '';
+          carAutoImageInput.value = '';
+        }
+      }, 300);
+    });
 
     async function loadStats() {
       const res = await fetch(API + '/admin-stats');
@@ -192,17 +469,88 @@
       `;
 
       document.getElementById('perf-grid').innerHTML = s.salesmanStats.length
-        ? s.salesmanStats.map(sm => `
-          <div class="perf-card">
-            <h4>${sm.name}</h4>
-            <p>${sm.email}</p>
-            <div class="perf-stats">
-              <div class="perf-stat"><div class="num blue">${sm.handled}</div><div class="lbl">Handled</div></div>
-              <div class="perf-stat"><div class="num">${sm.approved}</div><div class="lbl">Approved</div></div>
+        ? s.salesmanStats.map((sm, i) => {
+          const avatarUrl = sm.profile_pic
+            ? (sm.profile_pic.startsWith('http') ? sm.profile_pic : '/' + sm.profile_pic)
+            : `https://ui-avatars.com/api/?name=${encodeURIComponent(sm.name)}&background=1C69D4&color=fff&size=96&bold=true`;
+          return `
+          <div class="perf-card" id="perf-card-${i}">
+            <div class="perf-header" onclick="togglePerf(${i})">
+              <img class="perf-avatar" src="${avatarUrl}" alt="${sm.name}" />
+              <div class="perf-info">
+                <h4>${sm.name}</h4>
+                <p>${sm.email}</p>
+              </div>
+              <div class="perf-header-stats">
+                <div class="perf-stat"><div class="num">${sm.handled}</div><div class="lbl">Handled</div></div>
+                <div class="perf-stat"><div class="num">${sm.approved}</div><div class="lbl">Sold</div></div>
+              </div>
+              <span class="perf-toggle">▼</span>
             </div>
-          </div>
-        `).join('')
-        : '<p style="color:#555">No salesmen registered yet.</p>';
+            <div class="perf-body">
+              <div class="perf-body-inner">
+                <div class="perf-details">
+                  <div class="perf-detail-row">
+                    <span class="pd-label">Tenure</span>
+                    <span class="pd-value">${sm.tenure}</span>
+                  </div>
+                  <div class="perf-detail-row">
+                    <span class="pd-label">Total Sales</span>
+                    <span class="pd-value highlight">${sm.approved}</span>
+                  </div>
+                  <div class="perf-detail-row">
+                    <span class="pd-label">Salary</span>
+                    <div class="salary-edit">
+                      <input type="text" id="salary-${i}" value="${sm.salary}" placeholder="e.g. ₹8,00,000/yr" />
+                      <button onclick="updateSalary('${sm.id}', ${i})">Save</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="perf-chart-wrap">
+                  <canvas id="perf-chart-${i}"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>`;
+        }).join('')
+        : '<p style="color:var(--text-dim)">No salesmen registered yet.</p>';
+
+      // Render charts for each salesman
+      s.salesmanStats.forEach((sm, i) => {
+        const ctx = document.getElementById('perf-chart-' + i);
+        if (!ctx) return;
+        new Chart(ctx.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: sm.monthlySales.map(m => m.label),
+            datasets: [{
+              label: 'Cars Sold',
+              data: sm.monthlySales.map(m => m.count),
+              backgroundColor: 'rgba(28, 105, 212, 0.25)',
+              borderColor: '#1C69D4',
+              borderWidth: 2,
+              borderRadius: 4,
+              hoverBackgroundColor: 'rgba(28, 105, 212, 0.5)',
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false },
+              tooltip: {
+                backgroundColor: '#111', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1,
+                titleFont: { family: 'Montserrat', size: 11, weight: '600' },
+                bodyFont: { family: 'Montserrat', size: 12 },
+                padding: 12, cornerRadius: 0,
+              }
+            },
+            scales: {
+              x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { font: { family: 'Montserrat', size: 10, weight: '600' }, color: '#555' } },
+              y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { font: { family: 'Montserrat', size: 10, weight: '600' }, color: '#555', stepSize: 1 } }
+            }
+          }
+        });
+      });
     }
 
     async function loadCars() {
@@ -212,26 +560,53 @@
         <tr>
           <td>${c.model_name}</td>
           <td>${c.price}</td>
-          <td>${c.image || '—'}</td>
+          <td>${c.badge ? `<span class="badge" style="border:1px solid #4da6e8;color:#4da6e8;padding:3px 8px;font-size:9px;letter-spacing:1px">${c.badge}</span>` : '—'}</td>
+          <td>${c.image ? `<img class="car-thumb" src="${c.image.startsWith('http') ? c.image : '/' + c.image}" alt="${c.model_name}" />` : '—'}</td>
           <td><button class="delete-btn" onclick="deleteCar('${c.id}')">Delete</button></td>
         </tr>
       `).join('');
     }
 
+    // File input label update
+    document.getElementById('car-image').addEventListener('change', function() {
+      const label = this.closest('.file-upload-label');
+      const nameSpan = document.getElementById('file-name');
+      if (this.files.length) {
+        nameSpan.textContent = this.files[0].name;
+        label.classList.add('has-file');
+      } else {
+        nameSpan.textContent = 'Choose Image';
+        label.classList.remove('has-file');
+      }
+    });
+
     async function addCar(e) {
       e.preventDefault();
+      const formData = new FormData();
+      formData.append('model_name', document.getElementById('car-name').value);
+      formData.append('price', document.getElementById('car-price').value);
+      formData.append('badge', document.getElementById('car-badge').value);
+
+      const fileInput = document.getElementById('car-image');
+      if (fileInput.files.length) {
+        formData.append('image', fileInput.files[0]);
+      } else {
+        formData.append('auto_image', document.getElementById('car-auto-image').value);
+      }
+
       await fetch(API + '/add-car', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model_name: document.getElementById('car-name').value,
-          price: document.getElementById('car-price').value,
-          image: document.getElementById('car-image').value
-        })
+        body: formData
       });
+
       document.getElementById('car-name').value = '';
       document.getElementById('car-price').value = '';
-      document.getElementById('car-image').value = '';
+      document.getElementById('car-badge').value = '';
+      document.getElementById('car-auto-image').value = '';
+      fileInput.value = '';
+      document.getElementById('file-name').textContent = 'Choose Image';
+      document.querySelector('.file-upload-label').classList.remove('has-file');
+      autoRow.classList.remove('visible');
       loadCars();
       loadStats();
     }
@@ -268,6 +643,30 @@
           </tr>
         `).join('')
         : '<tr><td colspan="4" style="color:#555">No bookings yet.</td></tr>';
+    }
+
+    function togglePerf(i) {
+      document.getElementById('perf-card-' + i).classList.toggle('expanded');
+    }
+
+    async function updateSalary(id, i) {
+      const salary = document.getElementById('salary-' + i).value;
+      try {
+        const resp = await fetch(API + '/update-salary', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id, salary })
+        });
+        const result = await resp.json();
+        if (resp.ok) {
+          document.getElementById('salary-' + i).style.borderColor = '#00ff88';
+          setTimeout(() => { document.getElementById('salary-' + i).style.borderColor = ''; }, 1500);
+        } else {
+          alert('Failed to update salary: ' + (result.error || 'Unknown error'));
+        }
+      } catch (err) {
+        alert('Network error updating salary');
+      }
     }
 
     // Load everything
