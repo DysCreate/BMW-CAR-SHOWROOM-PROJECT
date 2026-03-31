@@ -7,6 +7,10 @@ CREATE TABLE users (
   email TEXT UNIQUE NOT NULL,
   password TEXT NOT NULL,
   role TEXT CHECK (role IN ('admin', 'salesman', 'customer')) DEFAULT 'customer',
+  profile_pic TEXT DEFAULT '',
+  join_date DATE DEFAULT CURRENT_DATE,
+  salary TEXT DEFAULT '',
+  phone TEXT DEFAULT '',
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -16,6 +20,7 @@ CREATE TABLE cars (
   model_name TEXT NOT NULL,
   price TEXT NOT NULL,
   image TEXT DEFAULT '',
+  badge TEXT DEFAULT '',
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 

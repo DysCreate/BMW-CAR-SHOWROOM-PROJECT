@@ -318,6 +318,29 @@ input, select, button { font-family: inherit; }
   stroke: #7fc4f5;
 }
 
+/* ===== User Name Dropdown ===== */
+.nav-user-wrap { position: relative; }
+.nav-user-dropdown {
+  display: none; position: absolute; top: 100%; right: 0; margin-top: 8px;
+  background: #111; border: 1px solid #1C69D4; border-radius: 8px;
+  overflow: hidden; min-width: 160px; z-index: 200;
+  box-shadow: 0 8px 32px rgba(28,105,212,0.2);
+}
+.nav-user-dropdown.show { display: block; }
+.nav-user-dropdown button {
+  width: 100%; padding: 12px 20px; border: none; cursor: pointer;
+  font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  text-align: left; transition: all 0.2s;
+}
+.nav-user-dropdown .dropdown-logout {
+  background: none; color: #1C69D4;
+}
+.nav-user-dropdown .dropdown-logout:hover { background: #1C69D4; color: #fff; }
+.nav-user-dropdown .dropdown-cancel {
+  background: none; color: #888; border-top: 1px solid #222;
+}
+.nav-user-dropdown .dropdown-cancel:hover { background: rgba(255,255,255,0.05); color: #fff; }
+
 /* ===== AUTH MODAL ===== */
 .auth-overlay {
   position: fixed;

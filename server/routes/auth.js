@@ -17,6 +17,7 @@ router.post('/login', async (req, res) => {
     if (data.password !== password) return res.status(401).json({ error: 'Invalid password' });
 
     res.json({
+      id: data.id,
       _id: data.id,
       name: data.name,
       email: data.email,
@@ -50,6 +51,7 @@ router.post('/register', async (req, res) => {
     if (error) return res.status(500).json({ error: error.message });
 
     res.json({
+      id: data.id,
       _id: data.id,
       name: data.name,
       email: data.email,
