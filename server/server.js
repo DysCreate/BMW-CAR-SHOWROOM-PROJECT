@@ -8,10 +8,11 @@ const salesmanRoutes = require('./routes/salesman');
 const adminRoutes    = require('./routes/admin');
 
 const app = express();
-const PORT = 3000;
+const PORT = Number(process.env.PORT) || 3000;
+const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN;
 
 // Middleware
-app.use(cors());
+app.use(cors(ALLOWED_ORIGIN ? { origin: ALLOWED_ORIGIN } : undefined));
 app.use(express.json());
 
 // Serve static files (HTML, CSS, JS, images) from project root
